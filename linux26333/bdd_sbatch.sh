@@ -139,7 +139,7 @@ filesToProcess|while read i; do
 #    echo $partialPreprocFlags
 #    echo $extraFlags
     touch $srcPath/$i.dbg
-    . ./jcpp.sh $srcPath/$i.c $extraFlags
+    sbatch -p sqhinx -A janker -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local --mail-type=all --mail-user=janker@fim.uni-passau.de  ./jcpp.sh $srcPath/$i.c $extraFlags
     if [ "$1" =  "--one" ]
     then
         exit
