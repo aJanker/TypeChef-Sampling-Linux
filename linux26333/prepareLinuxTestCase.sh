@@ -7,6 +7,11 @@ version=linux-2.6.33.3
 #fi
 #tar xjf $tarball
 
+git clone https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux-stable
+mv linux-stable/ linux
+cd linux/
+git checkout af352dbf0b0a8d9d4c17018d63fae48b654fd03b
+
 # ln -s $version linux
 cd linux
 make allnoconfig ARCH=x86
@@ -18,7 +23,7 @@ cd ..
 
 dir=`pwd`
 cd ..
-sbt mkrun
+java -jar sbt-launch.jar compile  mkrun
 
 cd $dir
 sh applyPCs.sh
