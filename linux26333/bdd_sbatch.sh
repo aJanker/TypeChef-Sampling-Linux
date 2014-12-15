@@ -25,7 +25,7 @@ filesToProcess() {
 system=linux-redhat
 partialPreprocFlags="--bdd -x CONFIG_ --xtc\
   --featureModelFExpr approx.fm --simplifyFM extramodels/x86.model \
-  --typeSystemFeatureModelDimacs=pcs/x86.dimacs \
+  --featureModelDimacs=pcs/x86.dimacs \
   --include=pcs/x86.completed.h --include=pcs/x86.nonbool.h --include=partialConf.h \
   -c ../$system.properties \
   --openFeat pcs/x86.open \
