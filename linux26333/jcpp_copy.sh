@@ -44,9 +44,6 @@ copyAST="$copyBase.tunit"
 copyStmtDegree="$copyBase.stmt.degree"
 copyErrorStmtDegree="$copyBase.stmt.error.degree"
 
-echo $inp
-echo $copyBase
-exit
 
 # Beware: the embedded for loop requotes the passed argument. That's dark magic,
 # don't ever try to touch it. It simplifies your life as a user of this program
