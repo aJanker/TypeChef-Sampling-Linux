@@ -5,4 +5,4 @@ for arch in x86
 do
   ../run.sh de.fosd.typechef.linux.GeneratePCFiles pcs/$arch.pc --workingDir linux/ 
 done
-
+echo "done with pcs"
