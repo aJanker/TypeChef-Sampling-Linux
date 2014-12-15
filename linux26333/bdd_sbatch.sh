@@ -31,7 +31,7 @@ partialPreprocFlags="--bdd -x CONFIG_ --xtc\
   --openFeat pcs/x86.open \
   --recordTiming --lexdebug --errorXML --serializeAST \
 -A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree \
-  --adjustLines --serializeAST"
+  --adjustLines"
 
 
 #  --typeSystemFeatureModelDimacs=2.6.33.3-2var.dimacs \
@@ -140,7 +140,7 @@ filesToProcess|while read i; do
 #    echo $partialPreprocFlags
 #    echo $extraFlags
     touch $srcPath/$i.dbg
-    sbatch -p chimaira  -A spl -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local --mail-type=all --mail-user=janker@fim.uni-passau.de  ./home/janker/setupAndRunLinux.sh  $srcPath/$i.c $extraFlags
+    sbatch -p chimaira  -A spl -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local --mail-type=all --mail-user=janker@fim.uni-passau.de  ./home/janker/clusterScripts/setupAndRunLinux.sh  $srcPath/$i.c $extraFlags
     if [ "$1" =  "--one" ]
     then
         exit
