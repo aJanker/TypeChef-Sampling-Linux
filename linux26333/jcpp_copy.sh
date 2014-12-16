@@ -1,5 +1,4 @@
 #!/bin/bash 
-#!/bin/bash -vx
 
 
 #javaOpts='-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044'
