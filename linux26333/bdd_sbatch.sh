@@ -1,5 +1,5 @@
 #!/bin/bash
-#!/bin/bash -vxe
+#!/bin/bash -vx
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -139,7 +139,7 @@ filesToProcess|while read i; do
     extraFlags="$(flags "$i")"
 #    echo $partialPreprocFlags
 #    echo $extraFlags
-    touch $srcPath/$i.dbg
+#    touch $srcPath/$i.dbg
     sbatch -p chimaira  -A spl -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local --mail-type=all --mail-user=janker@fim.uni-passau.de  /home/janker/clusterScripts/setupAndRunLinux.sh  $srcPath/$i.c $extraFlags
     if [ "$1" =  "--one" ]
     then
