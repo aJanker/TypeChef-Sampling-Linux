@@ -137,8 +137,8 @@ filesToProcess|while read i; do
     extraFlags="$(flags "$i")"
 #    echo $partialPreprocFlags
 #    echo $extraFlags
-    touch $srcPath/$i.dbg
-    . ./jcpp.sh $srcPath/$i.c $extraFlags
+#    touch $srcPath/$i.dbg
+    sbatch -p chimaira  -A spl -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local --mail-type=FAIL --mail-user=janker@fim.uni-passau.de  /home/janker/clusterScripts/setupAndRunLinux.sh  $srcPath/$i.c $extraFlags
     if [ "$1" =  "--one" ]
     then
         exit
