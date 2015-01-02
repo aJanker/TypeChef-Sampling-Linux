@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash -vxe
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -9,7 +8,7 @@
 #srcPath=linux-2.6.33.3
 # XXX:$PWD/ makes the path absolute, it is needed for some stupid bug!
 srcPath=$PWD/linux
-
+srcPath=$(echo $srcPath | sed s/home/local/g)
 ##################################################################
 # List of files to preprocess
 ##################################################################
@@ -138,7 +137,7 @@ filesToProcess|while read i; do
 #    echo $partialPreprocFlags
 #    echo $extraFlags
 #    touch $srcPath/$i.dbg
-    sbatch -p chimaira  -A spl -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local --mail-type=FAIL --mail-user=janker@fim.uni-passau.de  /home/janker/clusterScripts/setupAndRunLinux.sh  $srcPath/$i.c $extraFlags
+    sbatch -p chimaira  -A spl -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local   /home/janker/clusterScripts/setupAndRunLinux.sh  $srcPath/$i.c $extraFlags
     if [ "$1" =  "--one" ]
     then
         exit
