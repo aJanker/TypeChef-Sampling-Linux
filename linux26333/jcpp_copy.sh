@@ -59,7 +59,5 @@ cat "$outErr" 1>&2
 
 cp $outDbg $copyDbg
 cp $outErr $copyErr
-cp $outTime $copyTime
-cp $outAST $copyAST
 cp $outStmtDegree $copyStmtDegree
 cp $outErrorStmtDegree $copyErrorStmtDegree
