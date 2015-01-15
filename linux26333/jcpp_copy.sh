@@ -59,7 +59,7 @@ cat "$outErr" 1>&2
 
 #greps
 #allErrors
-grep -r --no-filename -o $outStmtDegree "^[0-9][0-9]*.*Feature" .  | sort -n | uniq -c > $copyBase.allStmts
+grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | sort -n | uniq -c > $copyBase.allStmts
 cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ =====\n/g' | sed  's/+++++//g' | sed -e 's/^[ \t]*//' > $outbase.allErrF
 grep  --no-filename -o  "^[0-9][0-9]*.*Feature:"  $outbase.allErrF  | sort -n | uniq -c >  $copybase.allErr
 
