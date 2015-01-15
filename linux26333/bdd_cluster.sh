@@ -8,7 +8,7 @@
 #srcPath=linux-2.6.33.3
 # XXX:$PWD/ makes the path absolute, it is needed for some stupid bug!
 srcPath=$PWD/linux
-srcPath=$(echo $srcPath | sed s/home/local/g)
+srcPath=$(echo $srcPath | sed s/scratch/local/g)
 ##################################################################
 # List of files to preprocess
 ##################################################################
@@ -22,13 +22,12 @@ filesToProcess() {
 #partialPreprocFlags="-c linux-redhat.properties -I $(gcc -print-file-name=include) -x CONFIG_ -U __INTEL_COMPILER \
 system=linux-redhat
 partialPreprocFlags="--bdd -x CONFIG_ --xtc\
-  --simplifyFM extramodels/x86.model \
   --featureModelDimacs=pcs/x86.dimacs \
   --include=pcs/x86.completed.h --include=pcs/x86.nonbool.h --include=partialConf.h \
   -c $srcPath/../../$system.properties \
   --openFeat pcs/x86.open \
   --recordTiming --lexdebug --errorXML \
--A doublefree -A interactiondegree"
+-A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree"
 
 
 #  --typeSystemFeatureModelDimacs=2.6.33.3-2var.dimacs \
