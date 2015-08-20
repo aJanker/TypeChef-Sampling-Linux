@@ -36,6 +36,8 @@ outStmtDegree="$outBase.stmt.degree"
 outErrorStmtDegree="$outBase.stmt.error.degree"
 
 copyBase=$(echo $outBase | sed s/local/scratch/g)
+copyAllStmts="$copyBase.stmts.gz"
+copyErrRaw="$copyBase.errRaw.gz"
 copyDbg="$copyBase.dbg"
 copyErr="$copyBase.err"
 copyTime="$copyBase.time"
@@ -59,17 +61,17 @@ cat "$outErr" 1>&2
 
 #greps
 #allErrors
-grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | sort -n | uniq -c > $copyBase.allStmts
-cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ =====\n/g' | sed  's/+++++//g' | sed -e 's/^[ \t]*//' > $outbase.allErrF
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature:" $outbase.allErrF  >  $copybase.ae
+grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | sort -n | uniq -c | gzip > $copyAllStmts
+cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ =====\n/g' | sed  's/+++++//g' | sed -e 's/^[ \t]*//' | gzip > $copyErrRaw
 
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is freed multiple times" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.df
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is freed although not dynamically allocted!" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.xf
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is used uninitialized!" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.ui
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*Case statement is not terminated by a break!" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.cs
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*switch statement has dangling code" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"   >  $copyBase.dc
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is not properly checked for" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.std
-grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is a dead store" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat" > $copyBase.ds
+
+#grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is freed multiple times" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.df
+#grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is freed although not dynamically allocted!" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.xf
+#grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is used uninitialized!" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.ui
+#grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*Case statement is not terminated by a break!" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.cs
+#grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*switch statement has dangling code" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"   >  $copyBase.dc
+#grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is not properly checked for" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.std
+#grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is a dead store" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat" > $copyBase.ds
 
 #copy
 #cp $outDbg $copyDbg
@@ -78,5 +80,8 @@ grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is a dead store" $outbase.allErr
 #compression
 tar cfvj $copyStmtDegree $outStmtDegree
 tar cfvj $copyErrorStmtDegree $outErrorStmtDegree
+
+rm $outStmtDegree
+rm $outErrorStmtDegree
 
 
