@@ -27,7 +27,7 @@ partialPreprocFlags="--bdd -x CONFIG_ --xtc\
   -c $srcPath/../../$system.properties \
   --openFeat pcs/x86.open \
   --recordTiming --lexdebug --errorXML \
--A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree"
+-A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree "
 
 
 #  --typeSystemFeatureModelDimacs=2.6.33.3-2var.dimacs \
@@ -136,7 +136,7 @@ filesToProcess|while read i; do
 #    echo $partialPreprocFlags
 #    echo $extraFlags
 #    touch $srcPath/$i.dbg
-    sbatch -p chimaira  -A spl -n 1 -c 2 --cpu_bind=sockets  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/setupAndRunLinux.sh  $srcPath/$i.c $partialPreprocFlags $extraFlags
+    sbatch -p chimaira  -A spl -n 1 -c 2 --time=04:00:00  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/setupAndRunLinuxMax.sh  $srcPath/$i.c $partialPreprocFlags $extraFlags
     if [ "$1" =  "--one" ]
     then
         exit
