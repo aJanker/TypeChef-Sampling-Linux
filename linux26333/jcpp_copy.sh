@@ -61,7 +61,7 @@ cat "$outErr" 1>&2
 
 #greps
 #allErrors
-grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | sort -n | uniq -c | gzip > $copyAllStmts
+grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | sort -n  | gzip > $copyAllStmts
 cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ =====\n/g' | sed  's/+++++//g' | sed -e 's/^[ \t]*//' | gzip > $copyErrRaw
 
 
