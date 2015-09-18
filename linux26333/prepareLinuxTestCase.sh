@@ -13,7 +13,6 @@ cd linux/
 git checkout af352dbf0b0a8d9d4c17018d63fae48b654fd03b
 
 # ln -s $version linux
-cd linux
 make allnoconfig ARCH=x86
 make prepare ARCH=x86
 # Creates include/generated/compile.h needed for init/version.o; the command
