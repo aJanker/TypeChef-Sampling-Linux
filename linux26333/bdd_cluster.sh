@@ -27,7 +27,7 @@ partialPreprocFlags="--bdd -x CONFIG_ --xtc\
   -c $srcPath/../../$system.properties \
   --openFeat pcs/x86.open \
   --recordTiming --lexdebug --errorXML \
--A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree "
+-A cfginnonvoidfunction -A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree "
 
 
 #  --typeSystemFeatureModelDimacs=2.6.33.3-2var.dimacs \
