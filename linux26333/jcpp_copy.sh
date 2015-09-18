@@ -42,8 +42,8 @@ copyDbg="$copyBase.dbg"
 copyErr="$copyBase.err"
 copyTime="$copyBase.time"
 copyAST="$copyBase.tunit"
-copyStmtDegree="$copyBase.stmt.degree.tar.bz2"
-copyErrorStmtDegree="$copyBase.stmt.error.degree.tar.bz2"
+copyStmtDegree="$copyBase.stmt.degree.tar.gz"
+copyErrorStmtDegree="$copyBase.stmt.error.degree.tar.gz"
 
 
 # Beware: the embedded for loop requotes the passed argument. That's dark magic,
@@ -61,7 +61,7 @@ cat "$outErr" 1>&2
 
 #greps
 #allErrors
-grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | sort -n  | gzip > $copyAllStmts
+grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | gzip > $copyAllStmts
 cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ =====\n/g' | sed  's/+++++//g' | sed -e 's/^[ \t]*//' | gzip > $copyErrRaw
 
 
@@ -78,8 +78,8 @@ cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ ==
 #cp $outErr $copyErr
 
 #compression
-tar cfvj $copyStmtDegree $outStmtDegree
-tar cfvj $copyErrorStmtDegree $outErrorStmtDegree
+tar cfvz $copyStmtDegree $outStmtDegree
+tar cfvz $copyErrorStmtDegree $outErrorStmtDegree
 
 rm $outStmtDegree
 rm $outErrorStmtDegree
