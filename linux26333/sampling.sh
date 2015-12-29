@@ -26,38 +26,54 @@ copyBase=$(echo $outBase | sed s/local/scratch/g)
 #    mv ${srcPath}/${i}.err ${srcPath}/${i}_family.err
 #    mv ${srcPath}/${i}.dbg ${srcPath}/${i}_family.dbg
 
+
 # single conf
     extraFlagsSC="--singleconf --rootfolder /local/janker/linuxMax"
-    ./jcpp_sampling.sh "$@" $extraFlagsSC
-    gzip ${outBase}.err ${copyBase}_singleconf.err.gz
-    gzip ${outBase}.dbg ${copyBase}_singleconf.dbg.gz
+    ./jcpp_sampling.sh $inp "$@" $extraFlagsSC
+    gzip -c ${outBase}.err > ${copyBase}_singleconf.err.gz
+    gzip -c ${outBase}.dbg > ${copyBase}_singleconf.dbg.gz
     mv ${outBase}.time ${copyBase}_singleconf.time
     mv ${outBase}.astimes ${copyBase}_singleconf.astimes
     mv ${outBase}.errreport ${outBase}_singleconf.errreport	
 
  # pairwise
     extraFlagsPW="--pairwise --rootfolder /local/janker/linuxMax"
-    ./jcpp_sampling.sh "$@" $extraFlagsPW
-    gzip ${outBase}.err ${copyBase}_pairwise.err.gz
-    gzip ${outBase}.dbg ${copyBase}_pairwise.dbg.gz
+    ./jcpp_sampling.sh $inp "$@" $extraFlagsPW
+    gzip -c ${outBase}.err > ${copyBase}_pairwise.err.gz
+    gzip -c ${outBase}.dbg > ${copyBase}_pairwise.dbg.gz
     mv ${outBase}.time ${copyBase}_pairwise.time
     mv ${outBase}.astimes ${copyBase}_pairwise.astimes
     mv ${outBase}.errreport ${outBase}_pairwise.errreport 
 
  # code coverage nh
     extraFlagsCC="--rootfolder /local/janker/linuxMax --codecoveragenh"
-    ./jcpp_sampling.sh "$@" $extraFlagsCC
-    gzip ${outBase}.err ${copyBase}_codecoveragenh.err.gz
-    gzip ${outBase}.dbg ${copyBase}_codecoveragenh.dbg.gz
+    ./jcpp_sampling.sh $inp "$@" $extraFlagsCC
+    gzip -c ${outBase}.err > ${copyBase}_codecoveragenh.err.gz
+    gzip -c ${outBase}.dbg > ${copyBase}_codecoveragenh.dbg.gz
     mv ${outBase}.time ${copyBase}_codecoveragenh.time
     mv ${outBase}.astimes ${copyBase}_codecoveragenh.astimes
     mv ${outBase}.errreport ${outBase}_codecoveragenh.errreport 	
 
 # create condensed report
-    find ${outBase} -type f -name "${filename}.c_*.errreport" | xargs cat > ${copyBase}.errreportall
+    
+    touch ${outBase}.errreportall
+ 
+    cat ${outBase}_singleconf.errreport >> ${outBase}.errreportall
+    cat ${outBase}_pairwise.errreport >> ${outBase}.errreportall	 
+    cat ${outBase}_codecoveragenh.errreport >> ${outBase}.errreportall
 
-    gzip ${outBase}_codecoveragenh.errreport ${copyBase}_codecoveragenh.errreport.gz
-    gzip ${outBase}_pairwise.errreport ${copyBase}_pairwise.errreport.gz
-    gzip ${outBase}_singleconf.errreport ${copyBase}_singleconf.errreport.gz
+    gzip -c ${outBase}.errreportall > ${copyBase}.errreportall.gz    	
+    gzip -c ${outBase}_codecoveragenh.errreport > ${copyBase}_codecoveragenh.errreport.gz
+    gzip -c ${outBase}_pairwise.errreport > ${copyBase}_pairwise.errreport.gz
+    gzip -c ${outBase}_singleconf.errreport > ${copyBase}_singleconf.errreport.gz
+#cleanup 
+
+   rm ${outBase}.err
+   rm ${outBase}.dbg
+   rm ${outBase}_codecoveragenh.errreport
+   rm ${outBase}_pairwise.errreport
+   rm ${outBase}_singleconf.errreport
+   rm ${outBase}.errreportall
+
 
 #mv to scratch
