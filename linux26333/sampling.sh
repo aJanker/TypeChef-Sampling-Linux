@@ -12,7 +12,7 @@ copyBase=$(echo $outBase | sed s/local/scratch/g)
 #    mv ${srcPath}/${i}.dbg ${srcPath}/${i}_family.dbg
 
 # single conf
-    extraFlagsSC="--singleconf --rootfolder /loccal/janker/linuxMax"
+    extraFlagsSC="--singleconf --rootfolder /local/janker/linuxMax"
     ./jcpp_sampling.sh "$@" $extraFlagsSC
     gzip ${outBase}.err ${copyBase}_singleconf.err.gz
     gzip ${outBase}.dbg ${copyBase}_singleconf.dbg.gz
@@ -21,7 +21,7 @@ copyBase=$(echo $outBase | sed s/local/scratch/g)
     mv ${outBase}.errreport ${outBase}_singleconf.errreport	
 
  # pairwise
-    extraFlagsPW="--pairwise --rootfolder /loccal/janker/linuxMax"
+    extraFlagsPW="--pairwise --rootfolder /local/janker/linuxMax"
     ./jcpp_sampling.sh "$@" $extraFlagsPW
     gzip ${outBase}.err ${copyBase}_pairwise.err.gz
     gzip ${outBase}.dbg ${copyBase}_pairwise.dbg.gz
@@ -30,7 +30,7 @@ copyBase=$(echo $outBase | sed s/local/scratch/g)
     mv ${outBase}.errreport ${outBase}_pairwise.errreport 
 
  # code coverage nh
-    extraFlagsCC="--rootfolder /loccal/janker/linuxMax --codecoveragenh"
+    extraFlagsCC="--rootfolder /local/janker/linuxMax --codecoveragenh"
     ./jcpp_sampling.sh "$@" $extraFlagsCC
     gzip ${outBase}.err ${copyBase}_codecoveragenh.err.gz
     gzip ${outBase}.dbg ${copyBase}_codecoveragenh.dbg.gz
