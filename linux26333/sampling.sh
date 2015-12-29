@@ -1,4 +1,19 @@
 #!/bin/bash
+# Brute argument parsing
+# The right thing to do would be to be a gcc replacement, parse its flags and
+# select the ones we care about.
+if [ $# -lt 1 ]; then
+  echo "Not enough arguments!" >&2
+  exit 1
+fi
+inp=$1
+shift
+
+if [ -z "$inp" ]; then
+  echo "inp not defined!" >&2
+  exit 1
+fi
+
 
 outBase="$(dirname $inp)/$(basename $inp .c)"
 copyBase=$(echo $outBase | sed s/local/scratch/g)
