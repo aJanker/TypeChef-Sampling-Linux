@@ -1,5 +1,23 @@
 #!/bin/bash
 
+#SBATCH -D /scratch/janker/linuxMax/TypeChef-LinuxAnalysis/linux26333
+#SBATCH --job-name=typechef
+#SBATCH -p idle
+#SBATCH -A idle
+#SBATCH --qos=idle
+#SBATCH --mem=8192
+#SBATCH --nodelist=chimaira[01-17]
+#SBATCH --get-user-env
+#SBATCH -n 1
+#SBATCH -c 2
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=janker@fim.uni-passau.de
+#SBATCH --mem_bind=local
+#SBATCH --output=/dev/null
+#SBATCH --error=/dev/null
+#SBATCH --time=12:00:00
+#SBATCH --array=0-7759
+
 #java -jar sbt-launch-0.7.4.jar  compile
 
 ##################################################################
@@ -8,7 +26,7 @@
 #srcPath=linux-2.6.33.3
 # XXX:$PWD/ makes the path absolute, it is needed for some stupid bug!
 srcPath=$PWD/linux
-srcPath=$(echo $srcPath | sed s/scratch/local/g)
+#srcPath=$(echo $srcPath | sed s/scratch/local/g)
 ##################################################################
 # List of files to preprocess
 ##################################################################
@@ -18,6 +36,11 @@ filesToProcess() {
   #awk -F: '$1 ~ /.c$/ {print gensub(/\.c$/, "", "", $1)}' < linux_2.6.33.3_pcs.txt
 }
 
+
+configId=${SLURM_ARRAY_TASK_ID}
+i=`cat pcs/x86.flist | head -n $((configId + 1)) | tail -n1`
+
+
 # Note: this clears $partialPreprocFlags
 #partialPreprocFlags="-c linux-redhat.properties -I $(gcc -print-file-name=include) -x CONFIG_ -U __INTEL_COMPILER \
 system=linux-redhat
@@ -26,8 +49,8 @@ partialPreprocFlags="--bdd -x CONFIG_ --xtc\
   --include=pcs/x86.completed.h --include=pcs/x86.nonbool.h --include=partialConf.h \
   -c $srcPath/../../$system.properties \
   --openFeat pcs/x86.open \
-  --recordTiming --lexdebug --errorXML \
--A cfginnonvoidfunction -A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree "
+ -A cfginnonvoidfunction -A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree \
+  --recordTiming --reuseAST --errorXML "
 
 
 #  --typeSystemFeatureModelDimacs=2.6.33.3-2var.dimacs \
@@ -130,21 +153,22 @@ export outCSV=linux.csv
 ##################################################################
 # Actually invoke the preprocessor and analyze result.
 ##################################################################
-filesToProcess|while read i; do
-  if [ ! -f $srcPath/$i.dbg ]; then
+#ifilesToProcess|while read i; do
+#  if [ ! -f $srcPath/$i.dbg ]; then
     extraFlags="$(flags "$i")"
+    /scratch/janker/TypeChef/typechef.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
 #    echo $partialPreprocFlags
 #    echo $extraFlags
 #    touch $srcPath/$i.dbg
-    sbatch -p chimaira  -A spl -n 1 -c 2 --time=04:00:00  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/setupAndRunLinuxMax.sh  $srcPath/$i.c $partialPreprocFlags $extraFlags
-    if [ "$1" =  "--one" ]
-    then
-        exit
-    fi
-  else
-    echo "Skipping $srcPath/$i.c"
-  fi
-done
+ #   sbatch -p chimaira  -A spl -n 1 -c 2 --time=01:00:00  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/linuxVaa.sh   $srcPath/$i.c $partialPreprocFlags $extraFlags
+ #   if [ "$1" =  "--one" ]
+ #   then
+ #       exit
+ #   fi
+#  else
+  #  echo "Skipping $srcPath/$i.c"
+ # fi
+#done
 
 # The original invocation of the compiler:
 # gcc -Wp,-MD,kernel/.fork.o.d
