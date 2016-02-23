@@ -1,4 +1,19 @@
 #!/bin/bash
+#SBATCH -D /scratch/janker/linuxMax/TypeChef-LinuxAnalysis/linux26333
+#SBATCH --job-name=typechef-sampling
+#SBATCH -p chimaira
+#SBATCH -A spl
+#SBATCH --get-user-env
+#SBATCH -n 1
+#SBATCH -c 2
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=janker@fim.uni-passau.de
+#SBATCH --mem_bind=local
+#SBATCH --output=/dev/null
+#SBATCH --error=/dev/null
+#SBATCH --time=12:00:00
+#SBATCH --array=0-7759
+#SBATCH --nice=5000
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -8,15 +23,18 @@
 #srcPath=linux-2.6.33.3
 # XXX:$PWD/ makes the path absolute, it is needed for some stupid bug!
 srcPath=$PWD/linux
-srcPath=$(echo $srcPath | sed s/scratch/local/g)
+#srcPath=$(echo $srcPath | sed s/scratch/local/g)
 ##################################################################
 # List of files to preprocess
 ##################################################################
-filesToProcess() {
-  local listFile=pcs/x86.flist
-  cat $listFile
+#filesToProcess() {
+#  local listFile=pcs/x86.flist
+#  cat $listFile
   #awk -F: '$1 ~ /.c$/ {print gensub(/\.c$/, "", "", $1)}' < linux_2.6.33.3_pcs.txt
-}
+#}
+
+configId=${SLURM_ARRAY_TASK_ID}
+i=`cat pcs/x86.flist | head -n $((configId + 1)) | tail -n1`
 
 # Note: this clears $partialPreprocFlags
 #partialPreprocFlags="-c linux-redhat.properties -I $(gcc -print-file-name=include) -x CONFIG_ -U __INTEL_COMPILER \
@@ -129,21 +147,21 @@ flags() {
 ##################################################################
 # Actually invoke the preprocessor and analyze result.
 ##################################################################
-filesToProcess|while read i; do
-  if [ ! -f $srcPath/$i.dbg ]; then
-    extraFlags="$(flags "$i")"
+#ifilesToProcess|while read i; do
+#  if [ ! -f $srcPath/$i.dbg ]; then
+#    extraFlags="$(flags "$i")"
 #    echo $partialPreprocFlags
 #    echo $extraFlags
 #    touch $srcPath/$i.dbg
-    sbatch -p chimaira  -A spl -n 1 -c 2 --time=12:00:00  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/linuxSampling.sh  $srcPath/$i.c $partialPreprocFlags $extraFlags
-    if [ "$1" =  "--one" ]
-    then
-        exit
-    fi
-  else
-    echo "Skipping $srcPath/$i.c"
-  fi
-done
+    sbatch -p chimaira  -A spl -n 1 -c 2 --time=6:00:00  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/linuxSampling.sh  $srcPath/$i.c $partialPreprocFlags $extraFlags
+#    if [ "$1" =  "--one" ]
+#    then
+#        exit
+#    fi
+#  else
+#    echo "Skipping $srcPath/$i.c"
+#  fi
+#done
 
 # The original invocation of the compiler:
 # gcc -Wp,-MD,kernel/.fork.o.d

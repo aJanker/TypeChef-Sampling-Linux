@@ -2,11 +2,8 @@
 
 #SBATCH -D /scratch/janker/linuxMax/TypeChef-LinuxAnalysis/linux26333
 #SBATCH --job-name=typechef
-#SBATCH -p idle
-#SBATCH -A idle
-#SBATCH --qos=idle
-#SBATCH --mem=8192
-#SBATCH --nodelist=chimaira[01-17]
+#SBATCH -p chimaira
+#SBATCH -A spl
 #SBATCH --get-user-env
 #SBATCH -n 1
 #SBATCH -c 2
@@ -17,6 +14,7 @@
 #SBATCH --error=/dev/null
 #SBATCH --time=12:00:00
 #SBATCH --array=0-7759
+#SBATCH --nice=5000
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -156,7 +154,7 @@ export outCSV=linux.csv
 #ifilesToProcess|while read i; do
 #  if [ ! -f $srcPath/$i.dbg ]; then
     extraFlags="$(flags "$i")"
-    /scratch/janker/TypeChef/typechef.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
+    ./sampling.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
 #    echo $partialPreprocFlags
 #    echo $extraFlags
 #    touch $srcPath/$i.dbg
