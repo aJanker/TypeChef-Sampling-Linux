@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH -D /scratch/janker/linuxMax/TypeChef-LinuxAnalysis/linux26333
-#SBATCH --job-name=typechef-vaa
+#SBATCH --job-name=typechef-sampling
 #SBATCH -p chimaira
 #SBATCH -A spl
 #SBATCH --qos=lopri
@@ -160,7 +160,7 @@ export outCSV=linux.csv
 #ifilesToProcess|while read i; do
 #  if [ ! -f $srcPath/$i.dbg ]; then
     extraFlags="$(flags "$i")"
-    /scratch/janker/TypeChef/typechef.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
+    ./sampling.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
 #    echo $partialPreprocFlags
 #    echo $extraFlags
 #    touch $srcPath/$i.dbg

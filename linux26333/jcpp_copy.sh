@@ -34,16 +34,21 @@ outTime="$outBase.time"
 outAST="$outBase.tunit"
 outStmtDegree="$outBase.stmt.degree"
 outErrorStmtDegree="$outBase.stmt.error.degree"
+outcfgDegree="$outBase.cfgdegree"
+outasTime="$outBase.astimes"
 
 copyBase=$(echo $outBase | sed s/local/scratch/g)
 copyAllStmts="$copyBase.stmts.gz"
 copyErrRaw="$copyBase.errRaw.gz"
-copyDbg="$copyBase.dbg"
-copyErr="$copyBase.err"
+copyDbg="$copyBase.dbg.gz"
+copyErr="$copyBase.err.gz"
 copyTime="$copyBase.time"
 copyAST="$copyBase.tunit"
 copyStmtDegree="$copyBase.stmt.degree.tar.gz"
 copyErrorStmtDegree="$copyBase.stmt.error.degree.tar.gz"
+copycfgDegree="$copyBase.cfgdegree.tar.gz"
+rawcfgDegree="$copyBase.cfgdegree_raw.gz"
+copyasTime="$copyBase.astimes"
 
 
 # Beware: the embedded for loop requotes the passed argument. That's dark magic,
@@ -61,8 +66,6 @@ cat "$outErr" 1>&2
 
 #greps
 #allErrors
-grep --no-filename -o  "^[0-9][0-9]*.*Feature" $outStmtDegree  | gzip > $copyAllStmts
-cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ =====\n/g' | sed  's/+++++//g' | sed -e 's/^[ \t]*//' | gzip > $copyErrRaw
 
 
 #grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is freed multiple times" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat"  > $copyBase.df
@@ -74,14 +77,19 @@ cat $outErrorStmtDegree | sed ':a;N;$!ba;s/\n/+++++ /g' | sed  's/==========/ ==
 #grep  --no-filename -o  "^[0-9][0-9]*.*Feature.*is a dead store" $outbase.allErrF | grep -o "^[0-9][0-9]*.*Feat" > $copyBase.ds
 
 #copy
-#cp $outDbg $copyDbg
+#mv $outDbg.gz $copyDbg
 #cp $outErr $copyErr
+#cp $outTime $copyTime
+#cp $outsaTime $copysaTime 
 
 #compression
-tar cfvz $copyStmtDegree $outStmtDegree
-tar cfvz $copyErrorStmtDegree $outErrorStmtDegree
-
-rm $outStmtDegree
-rm $outErrorStmtDegree
-
-
+gzip -c ${outBase}.err > ${copyBase}_vaa.err.gz
+gzip -c ${outBase}.dbg > ${copyBase}_vaa.dbg.gz
+#awk '{ print $1 }' $copycfgDegree | sort | gzip > $rawcfgDegree 
+#tar cfvz $copycfgDegree $outcfgDegree
+#rm $outcfgDegree 
+#rm $outStmtDegree
+#rm $outErrorStmtDegree
+#rm $outcfgDegree
+#rm $outDbg
+#rm $outErr

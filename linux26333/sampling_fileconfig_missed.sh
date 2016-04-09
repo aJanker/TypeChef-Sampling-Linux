@@ -1,22 +1,17 @@
 #!/bin/bash
-
 #SBATCH -D /scratch/janker/linuxMax/TypeChef-LinuxAnalysis/linux26333
-#SBATCH --job-name=typechef-vaa
+#SBATCH --job-name=typechef-sampling
 #SBATCH -p chimaira
 #SBATCH -A spl
-#SBATCH --qos=lopri
 #SBATCH --get-user-env
 #SBATCH -n 1
 #SBATCH -c 2
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=janker@fim.uni-passau.de
 #SBATCH --mem_bind=local
-#SBATCH --output=/dev/null
-#SBATCH --error=/dev/null
-#SBATCH --time=20:00:00
-#SBATCH --array=0-7759
-#SBATCH --mem=5120
-#SBATCH --exclude=chimaira17
+#SBATCH --output=/home/janker/arrayJob2_%A_%a.out
+#SBATCH --time=24:00:00
+#SBATCH --array=0-2
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -30,16 +25,14 @@ srcPath=$PWD/linux
 ##################################################################
 # List of files to preprocess
 ##################################################################
-filesToProcess() {
-  local listFile=pcs/x86.flist
-  cat $listFile
+#filesToProcess() {
+#  local listFile=pcs/x86.flist
+#  cat $listFile
   #awk -F: '$1 ~ /.c$/ {print gensub(/\.c$/, "", "", $1)}' < linux_2.6.33.3_pcs.txt
-}
-
+#}
 
 configId=${SLURM_ARRAY_TASK_ID}
-i=`cat pcs/x86.flist | head -n $((configId + 1)) | tail -n1`
-
+i=`cat missing_sampling  | head -n $((configId + 1)) | tail -n1`
 
 # Note: this clears $partialPreprocFlags
 #partialPreprocFlags="-c linux-redhat.properties -I $(gcc -print-file-name=include) -x CONFIG_ -U __INTEL_COMPILER \
@@ -49,8 +42,7 @@ partialPreprocFlags="--bdd -x CONFIG_ --xtc\
   --include=pcs/x86.completed.h --include=pcs/x86.nonbool.h --include=partialConf.h \
   -c $srcPath/../../$system.properties \
   --openFeat pcs/x86.open \
- -A cfginnonvoidfunction -A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree \
-  --recordTiming --reuseAST --errorXML "
+  --recordTiming --reuseAST "
 
 
 #  --typeSystemFeatureModelDimacs=2.6.33.3-2var.dimacs \
@@ -79,8 +71,6 @@ flags() {
     extraFlag="-I $srcPath/virt/kvm -I $srcPath/arch/x86/kvm -I $srcPath"
   elif [ "$name" = "net/mac80211/driver-trace" ]; then
     extraFlag="-I $srcPath/net/mac80211"
-  elif grep -q "drivers/misc/sgi-gru/" <<< "$name"; then
-    extraFlag="-DCONIFG_X86_64"
   elif grep -q "fs/gfs2/" <<< "$name"; then
     extraFlag="-I $srcPath/fs/gfs2"
   elif grep -q "fs/ocfs2/" <<< "$name"; then
@@ -91,8 +81,6 @@ flags() {
     extraFlag="-DNTFS_VERSION=\"\\\"2.1.29\"\\\" --include $srcPath/fs/ntfs/ntfs.h"
   elif grep -q "drivers/gpu/drm/" <<< "$name"; then
     extraFlag="-I $srcPath/include/drm"
- elif grep -q "drivers/block/" <<< "$name"; then
-    extraFlag="-DCONFIG_BLOCK"
   elif egrep -q "drivers/scsi/pcmcia/|drivers/usb/storage/" <<< "$name"; then
     extraFlag="-I $srcPath/drivers/scsi"
   elif grep -q "drivers/scsi/cxgb3i/" <<< "$name"; then
@@ -149,7 +137,7 @@ flags() {
   echo "$extraFlag -I $srcPath/include -I $srcPath/arch/x86/include -D __KERNEL__ -DCONFIG_AS_CFI=1 -DCONFIG_AS_CFI_SIGNAL_FRAME=1 -DKBUILD_BASENAME=\"\\\"$base\\\"\" -DKBUILD_MODNAME=\"\\\"$base\\\"\""
 }
 
-export outCSV=linux.csv
+#export outCSV=linux.csv
 ## Reset output
 #echo -n > "$outCSV"
 
@@ -159,19 +147,18 @@ export outCSV=linux.csv
 ##################################################################
 #ifilesToProcess|while read i; do
 #  if [ ! -f $srcPath/$i.dbg ]; then
-    extraFlags="$(flags "$i")"
-    /scratch/janker/TypeChef/typechef.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
+#    extraFlags="$(flags "$i")"
 #    echo $partialPreprocFlags
 #    echo $extraFlags
 #    touch $srcPath/$i.dbg
- #   sbatch -p chimaira  -A spl -n 1 -c 2 --time=01:00:00  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/linuxVaa.sh   $srcPath/$i.c $partialPreprocFlags $extraFlags
- #   if [ "$1" =  "--one" ]
- #   then
- #       exit
- #   fi
+     /home/janker/clusterScripts/linuxSampling.sh  $srcPath/$i.c $partialPreprocFlags $extraFlags
+#    if [ "$1" =  "--one" ]
+#    then
+#        exit
+#    fi
 #  else
-  #  echo "Skipping $srcPath/$i.c"
- # fi
+#    echo "Skipping $srcPath/$i.c"
+#  fi
 #done
 
 # The original invocation of the compiler:

@@ -11,9 +11,9 @@
 #SBATCH --mem_bind=local
 #SBATCH --output=/dev/null
 #SBATCH --error=/dev/null
-#SBATCH --time=12:00:00
+#SBATCH --time=20:00:00
 #SBATCH --array=0-7759
-#SBATCH --nice=5000
+#SBATCH --nice=3500
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
