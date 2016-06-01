@@ -1,20 +1,5 @@
 #!/bin/bash
 
-#SBATCH -D /scratch/janker/linuxMax/TypeChef-LinuxAnalysis/linux26333
-#SBATCH --job-name=typechef-sampling
-#SBATCH -p chimaira
-#SBATCH -A spl
-#SBATCH --get-user-env
-#SBATCH -n 1
-#SBATCH -c 2
-#SBATCH --mail-type=FAIL
-#SBATCH --mail-user=janker@fim.uni-passau.de
-#SBATCH --mem_bind=local
-#SBATCH --output=/dev/null
-#SBATCH --error=/dev/null
-#SBATCH --time=20:00:00
-#SBATCH --array=0-7759
-#SBATCH --mem=8192
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -35,8 +20,6 @@ filesToProcess() {
 }
 
 
-configId=${SLURM_ARRAY_TASK_ID}
-i=`cat pcs/x86.flist | head -n $((configId + 1)) | tail -n1`
 
 
 # Note: this clears $partialPreprocFlags
@@ -155,22 +138,17 @@ export outCSV=linux.csv
 ##################################################################
 # Actually invoke the preprocessor and analyze result.
 ##################################################################
-#ifilesToProcess|while read i; do
-#  if [ ! -f $srcPath/$i.dbg ]; then
+filesToProcess|while read i; do
+  if [ ! -f $srcPath/$i.dbg ]; then
     extraFlags="$(flags "$i")"
     ./sampling.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
-#    echo $partialPreprocFlags
-#    echo $extraFlags
-#    touch $srcPath/$i.dbg
- #   sbatch -p chimaira  -A spl -n 1 -c 2 --time=01:00:00  --mem_bind=local --output=/dev/null --error=/dev/null  /home/janker/clusterScripts/linuxVaa.sh   $srcPath/$i.c $partialPreprocFlags $extraFlags
- #   if [ "$1" =  "--one" ]
- #   then
- #       exit
- #   fi
-#  else
-  #  echo "Skipping $srcPath/$i.c"
- # fi
-#done
+    echo $partialPreprocFlags
+    echo $extraFlags
+    touch $srcPath/$i.dbg
+  else
+    echo "Skipping $srcPath/$i.c"
+  fi
+done
 
 # The original invocation of the compiler:
 # gcc -Wp,-MD,kernel/.fork.o.d
