@@ -8,7 +8,7 @@ The setup requires multiple steps. Contact me if there are any issues.
 
 First we need the source code of the Kernel and extract the correct version as some file presence condtions.
 
-The script `./linux26333/prepareLinuxTestCase.sh` has some code to automate 
+Go to `./linux26333`, the script `./prepareLinuxTestCase.sh` has some code to automate 
 the download, extraction and preparation. In case your operating system does not offer the requiered C system headers, you can find the used headers for our evaluation [here](https://github.com/aJanker/TypeChef-GNUCHeader).
 
 
