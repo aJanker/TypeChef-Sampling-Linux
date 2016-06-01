@@ -4,7 +4,6 @@
 #SBATCH --job-name=typechef-sampling
 #SBATCH -p chimaira
 #SBATCH -A spl
-#SBATCH --qos=lopri
 #SBATCH --get-user-env
 #SBATCH -n 1
 #SBATCH -c 2
@@ -15,8 +14,7 @@
 #SBATCH --error=/dev/null
 #SBATCH --time=20:00:00
 #SBATCH --array=0-7759
-#SBATCH --mem=5120
-#SBATCH --exclude=chimaira17
+#SBATCH --mem=8192
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -79,6 +77,8 @@ flags() {
     extraFlag="-I $srcPath/virt/kvm -I $srcPath/arch/x86/kvm -I $srcPath"
   elif [ "$name" = "net/mac80211/driver-trace" ]; then
     extraFlag="-I $srcPath/net/mac80211"
+  elif grep -q "drivers/misc/sgi-gru/" <<< "$name"; then
+    extraFlag="-DCONIFG_X86_64"
   elif grep -q "fs/gfs2/" <<< "$name"; then
     extraFlag="-I $srcPath/fs/gfs2"
   elif grep -q "fs/ocfs2/" <<< "$name"; then
@@ -89,6 +89,8 @@ flags() {
     extraFlag="-DNTFS_VERSION=\"\\\"2.1.29\"\\\" --include $srcPath/fs/ntfs/ntfs.h"
   elif grep -q "drivers/gpu/drm/" <<< "$name"; then
     extraFlag="-I $srcPath/include/drm"
+ elif grep -q "drivers/block/" <<< "$name"; then
+    extraFlag="-DCONFIG_BLOCK"
   elif egrep -q "drivers/scsi/pcmcia/|drivers/usb/storage/" <<< "$name"; then
     extraFlag="-I $srcPath/drivers/scsi"
   elif grep -q "drivers/scsi/cxgb3i/" <<< "$name"; then
