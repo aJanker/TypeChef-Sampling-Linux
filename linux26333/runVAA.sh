@@ -136,7 +136,7 @@ export outCSV=linux.csv
 ##################################################################
 # Actually invoke the preprocessor and analyze result.
 ##################################################################
-#ifilesToProcess|while read i; do
+filesToProcess|while read i; do
   if [ ! -f $srcPath/$i.dbg ]; then
     extraFlags="$(flags "$i")"
     ../../TypeChef/typechef.sh $srcPath/$i.c $partialPreprocFlags $extraFlags
