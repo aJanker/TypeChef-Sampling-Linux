@@ -15,8 +15,7 @@
 #SBATCH --error=/dev/null
 #SBATCH --time=20:00:00
 #SBATCH --array=0-7759
-#SBATCH --mem=5120
-#SBATCH --exclude=chimaira17
+#SBATCH --mem=8192
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
@@ -50,7 +49,7 @@ partialPreprocFlags="--bdd -x CONFIG_ --xtc\
   -c $srcPath/../../$system.properties \
   --openFeat pcs/x86.open \
  -A cfginnonvoidfunction -A doublefree -A xfree -A uninitializedmemory -A casetermination -A danglingswitchcode -A checkstdlibfuncreturn -A deadstore -A interactiondegree \
-  --recordTiming --reuseAST --errorXML "
+ --serializeAST --recordTiming --errorXML "
 
 
 #  --typeSystemFeatureModelDimacs=2.6.33.3-2var.dimacs \

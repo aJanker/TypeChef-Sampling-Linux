@@ -23,7 +23,6 @@ tokenstream.txt
 *.dbg
 *.diffs
 .idea
-linux-2.6.33.3
 busybox
 find.pi
 fork.pi

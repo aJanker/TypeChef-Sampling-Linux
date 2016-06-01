@@ -4,7 +4,6 @@
 #SBATCH --job-name=typechef-sampling
 #SBATCH -p chimaira
 #SBATCH -A spl
-#SBATCH --qos=lopri
 #SBATCH --get-user-env
 #SBATCH -n 1
 #SBATCH -c 2
@@ -15,8 +14,7 @@
 #SBATCH --error=/dev/null
 #SBATCH --time=20:00:00
 #SBATCH --array=0-7759
-#SBATCH --mem=5120
-#SBATCH --exclude=chimaira17
+#SBATCH --mem=8192
 
 #java -jar sbt-launch-0.7.4.jar  compile
 
